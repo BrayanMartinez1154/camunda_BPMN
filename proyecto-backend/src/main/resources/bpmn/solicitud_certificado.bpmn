@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:definitions xmlns:ns0="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ns2="http://camunda.org/schema/1.0/bpmn" xmlns:ns3="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns5="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns1="http://camunda.org/schema/modeler/1.0" id="Definitions_1tlf8gr" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" ns1:executionPlatform="Camunda Platform" ns1:executionPlatformVersion="7.22.0">
+  <ns0:message id="mensajeRecibo" name="EnviarReciboPago" />
+  <ns0:message id="mensajeCertificado" name="EnviarCertificado" />
+  <ns0:collaboration id="Collaboration_10ejrc4">
+    <ns0:participant id="Participant_074a6ub" name="Departamento de Registro Académico" processRef="certificado_proceso" />
+  </ns0:collaboration>
+  <ns0:process id="certificado_proceso" name="Proceso Solicitud Certificado" isExecutable="true" ns2:historyTimeToLive="P30D">
+    <ns0:laneSet id="LaneSet_1qv0od7">
+      <ns0:lane id="Lane_05p55bw" name="Secretaria de Registro Academico">
+        <ns0:flowNodeRef>evento3_1</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_3</ns0:flowNodeRef>
+      </ns0:lane>
+      <ns0:lane id="Lane_01cyqfe" name="Profesional Encargado del Registro Academico">
+        <ns0:flowNodeRef>tarea3_4</ns0:flowNodeRef>
+        <ns0:flowNodeRef>Event_1keait3</ns0:flowNodeRef>
+        <ns0:flowNodeRef>Event_09yctbf</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_9</ns0:flowNodeRef>
+        <ns0:flowNodeRef>evento3_2</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_6</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_5</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_10</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_11</ns0:flowNodeRef>
+        <ns0:flowNodeRef>Event_0cw1u59</ns0:flowNodeRef>
+      </ns0:lane>
+      <ns0:lane id="Lane_19uzppo" name="Estudiante">
+        <ns0:flowNodeRef>Event_0s5lkhi</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_7</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_8</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_1</ns0:flowNodeRef>
+        <ns0:flowNodeRef>tarea3_2</ns0:flowNodeRef>
+      </ns0:lane>
+    </ns0:laneSet>
+    <ns0:startEvent id="Event_0s5lkhi" name="Inicio de solicitud">
+      <ns0:outgoing>Flow_101t7xl</ns0:outgoing>
+    </ns0:startEvent>
+    <ns0:endEvent id="Event_1keait3" name="Solicitud terminada">
+      <ns0:incoming>Flow_0j0lul7</ns0:incoming>
+    </ns0:endEvent>
+    <ns0:endEvent id="Event_09yctbf" name="Solicitud Cancelada">
+      <ns0:incoming>Flow_0x43z2j</ns0:incoming>
+    </ns0:endEvent>
+    <ns0:userTask id="tarea3_1" name="Solicitar certificado" ns2:formRef="Form_SolicitarCertificado" ns2:formRefBinding="latest">
+      <ns0:extensionElements>
+        <ns2:formData>
+          <ns2:formField id="codigoEstudiantil" label="Código estudiantil" type="string">
+            <ns2:validation>
+              <ns2:constraint name="required" />
+            </ns2:validation>
+          </ns2:formField>
+          <ns2:formField id="tipoCertificado" label="Tipo de certificado" type="enum">
+            <ns2:validation>
+              <ns2:constraint name="required" />
+            </ns2:validation>
+            <ns2:value id="estudios" name="Certificado de Estudios" />
+            <ns2:value id="notas" name="Certificado de Notas" />
+          </ns2:formField>
+          <ns2:formField id="motivoSolicitud" label="Motivo de la solicitud (opcional)" type="string" />
+        </ns2:formData>
+      </ns0:extensionElements>
+      <ns0:incoming>Flow_101t7xl</ns0:incoming>
+      <ns0:outgoing>Flow_0czl3fd</ns0:outgoing>
+    </ns0:userTask>
+    <ns0:serviceTask id="tarea3_2" name="Enviar formulario" ns2:delegateExpression="#{enviarFormularioDelegate}">
+      <ns0:incoming>Flow_0czl3fd</ns0:incoming>
+      <ns0:outgoing>Flow_1mcqovm</ns0:outgoing>
+    </ns0:serviceTask>
+    <ns0:userTask id="tarea3_7" name="Ver recibo de pago" ns2:formRef="Form_VerRecibo" ns2:formRefBinding="latest">
+      <ns0:incoming>Flow_0xx2xea</ns0:incoming>
+      <ns0:outgoing>Flow_14pfqxl</ns0:outgoing>
+    </ns0:userTask>
+    <ns0:userTask id="tarea3_8" name="Hacer pago" ns2:formRef="Form_HacerPago" ns2:formRefBinding="latest">
+      <ns0:incoming>Flow_14pfqxl</ns0:incoming>
+      <ns0:outgoing>Flow_0vi68t6</ns0:outgoing>
+    </ns0:userTask>
+    <ns0:intermediateCatchEvent id="evento3_1" name="Formulario Recibido">
+      <ns0:incoming>Flow_1mcqovm</ns0:incoming>
+      <ns0:outgoing>Flow_0in5rof</ns0:outgoing>
+      <ns0:messageEventDefinition id="MessageEventDefinition_1dbiz81" messageRef="mensajeRecibo" />
+    </ns0:intermediateCatchEvent>
+    <ns0:intermediateThrowEvent id="Event_0cw1u59" name="Certificado enviado">
+      <ns0:incoming>Flow_0we64vq</ns0:incoming>
+      <ns0:outgoing>Flow_0j0lul7</ns0:outgoing>
+      <ns0:messageEventDefinition id="MessageEventDefinition_1mhi4tk" messageRef="mensajeCertificado" />
+    </ns0:intermediateThrowEvent>
+    <ns0:userTask id="tarea3_3" name="Registrar Solicitud" ns2:formRef="Form_RegistrarSolicitud" ns2:formRefBinding="latest">
+      <ns0:incoming>Flow_0in5rof</ns0:incoming>
+      <ns0:outgoing>Flow_0cfursw</ns0:outgoing>
+    </ns0:userTask>
+    <ns0:serviceTask id="tarea3_4" name="Verificar Requisitos Necesarios" ns2:delegateExpression="#{verificarRequisitosDelegate}">
+      <ns0:incoming>Flow_0cfursw</ns0:incoming>
+      <ns0:outgoing>Flow_06ysvk0</ns0:outgoing>
+    </ns0:serviceTask>
+    <ns0:serviceTask id="tarea3_5" name="Generar recibo de pago" ns2:delegateExpression="#{generarReciboDelegate}">
+      <ns0:incoming>Flow_06ysvk0</ns0:incoming>
+      <ns0:outgoing>Flow_1lh2jmf</ns0:outgoing>
+    </ns0:serviceTask>
+    <ns0:serviceTask id="tarea3_6" name="Enviar recibo" ns2:delegateExpression="#{enviarReciboDelegate}">
+      <ns0:incoming>Flow_1lh2jmf</ns0:incoming>
+      <ns0:outgoing>Flow_0xx2xea</ns0:outgoing>
+    </ns0:serviceTask>
+    <ns0:receiveTask id="tarea3_9" name="Recibir pago" messageRef="mensajeRecibo">
+      <ns0:incoming>Flow_0vi68t6</ns0:incoming>
+      <ns0:outgoing>Flow_0zntu1i</ns0:outgoing>
+    </ns0:receiveTask>
+    <ns0:userTask id="tarea3_10" name="Emitir Certificado" ns2:formRef="Form_EmitirCertificado" ns2:formRefBinding="latest">
+      <ns0:incoming>Flow_0zntu1i</ns0:incoming>
+      <ns0:outgoing>Flow_1ozw9l6</ns0:outgoing>
+    </ns0:userTask>
+    <ns0:serviceTask id="tarea3_11" name="Enviar Certificado" ns2:delegateExpression="#{enviarCertificadoDelegate}">
+      <ns0:incoming>Flow_1ozw9l6</ns0:incoming>
+      <ns0:outgoing>Flow_0we64vq</ns0:outgoing>
+    </ns0:serviceTask>
+    <ns0:boundaryEvent id="evento3_2" name="5 Dias" attachedToRef="tarea3_9">
+      <ns0:outgoing>Flow_0x43z2j</ns0:outgoing>
+      <ns0:timerEventDefinition id="TimerEventDefinition_055im4q">
+        <ns0:timeDuration>P5D</ns0:timeDuration>
+      </ns0:timerEventDefinition>
+    </ns0:boundaryEvent>
+    <ns0:sequenceFlow id="Flow_101t7xl" sourceRef="Event_0s5lkhi" targetRef="tarea3_1" />
+    <ns0:sequenceFlow id="Flow_0czl3fd" sourceRef="tarea3_1" targetRef="tarea3_2" />
+    <ns0:sequenceFlow id="Flow_1mcqovm" sourceRef="tarea3_2" targetRef="evento3_1" />
+    <ns0:sequenceFlow id="Flow_0in5rof" sourceRef="evento3_1" targetRef="tarea3_3" />
+    <ns0:sequenceFlow id="Flow_0cfursw" sourceRef="tarea3_3" targetRef="tarea3_4" />
+    <ns0:sequenceFlow id="Flow_06ysvk0" sourceRef="tarea3_4" targetRef="tarea3_5" />
+    <ns0:sequenceFlow id="Flow_1lh2jmf" sourceRef="tarea3_5" targetRef="tarea3_6" />
+    <ns0:sequenceFlow id="Flow_0xx2xea" sourceRef="tarea3_6" targetRef="tarea3_7" />
+    <ns0:sequenceFlow id="Flow_14pfqxl" sourceRef="tarea3_7" targetRef="tarea3_8" />
+    <ns0:sequenceFlow id="Flow_0vi68t6" sourceRef="tarea3_8" targetRef="tarea3_9" />
+    <ns0:sequenceFlow id="Flow_0zntu1i" sourceRef="tarea3_9" targetRef="tarea3_10" />
+    <ns0:sequenceFlow id="Flow_1ozw9l6" sourceRef="tarea3_10" targetRef="tarea3_11" />
+    <ns0:sequenceFlow id="Flow_0we64vq" sourceRef="tarea3_11" targetRef="Event_0cw1u59" />
+    <ns0:sequenceFlow id="Flow_0j0lul7" sourceRef="Event_0cw1u59" targetRef="Event_1keait3" />
+    <ns0:sequenceFlow id="Flow_0x43z2j" sourceRef="evento3_2" targetRef="Event_09yctbf" />
+  </ns0:process>
+  <ns3:BPMNDiagram id="BPMNDiagram_1">
+    <ns3:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_10ejrc4">
+      <ns3:BPMNShape id="Participant_074a6ub_di" bpmnElement="Participant_074a6ub" isHorizontal="true">
+        <ns4:Bounds x="152" y="90" width="2298" height="870" />
+        <ns3:BPMNLabel />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Lane_19uzppo_di" bpmnElement="Lane_19uzppo" isHorizontal="true">
+        <ns4:Bounds x="182" y="90" width="2268" height="202" />
+        <ns3:BPMNLabel />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Lane_01cyqfe_di" bpmnElement="Lane_01cyqfe" isHorizontal="true">
+        <ns4:Bounds x="182" y="610" width="2268" height="350" />
+        <ns3:BPMNLabel />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Lane_05p55bw_di" bpmnElement="Lane_05p55bw" isHorizontal="true">
+        <ns4:Bounds x="182" y="292" width="2268" height="318" />
+        <ns3:BPMNLabel />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Event_0s5lkhi_di" bpmnElement="Event_0s5lkhi">
+        <ns4:Bounds x="252" y="172" width="36" height="36" />
+        <ns3:BPMNLabel>
+          <ns4:Bounds x="228" y="215" width="84" height="14" />
+        </ns3:BPMNLabel>
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Event_1keait3_di" bpmnElement="Event_1keait3">
+        <ns4:Bounds x="2372" y="702" width="36" height="36" />
+        <ns3:BPMNLabel>
+          <ns4:Bounds x="2366" y="745" width="49" height="27" />
+        </ns3:BPMNLabel>
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Event_09yctbf_di" bpmnElement="Event_09yctbf">
+        <ns4:Bounds x="2372" y="822" width="36" height="36" />
+        <ns3:BPMNLabel>
+          <ns4:Bounds x="2363" y="865" width="54" height="27" />
+        </ns3:BPMNLabel>
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_0lhu9lg_di" bpmnElement="tarea3_1">
+        <ns4:Bounds x="340" y="150" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_0ma9czy_di" bpmnElement="tarea3_2">
+        <ns4:Bounds x="530" y="150" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_0dw3zj4_di" bpmnElement="tarea3_7">
+        <ns4:Bounds x="1470" y="170" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_05gxdsk_di" bpmnElement="tarea3_8">
+        <ns4:Bounds x="1610" y="170" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Event_1j5luay_di" bpmnElement="evento3_1">
+        <ns4:Bounds x="692" y="382" width="36" height="36" />
+        <ns3:BPMNLabel>
+          <ns4:Bounds x="683" y="425" width="54" height="27" />
+        </ns3:BPMNLabel>
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Event_168g01a_di" bpmnElement="Event_0cw1u59">
+        <ns4:Bounds x="2302" y="702" width="36" height="36" />
+        <ns3:BPMNLabel>
+          <ns4:Bounds x="2293" y="745" width="54" height="27" />
+        </ns3:BPMNLabel>
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_1kmbgu8_di" bpmnElement="tarea3_3">
+        <ns4:Bounds x="760" y="360" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_1t69g5i_di" bpmnElement="tarea3_4">
+        <ns4:Bounds x="950" y="680" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_1ykie1v_di" bpmnElement="tarea3_5">
+        <ns4:Bounds x="1120" y="680" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_1u4owkf_di" bpmnElement="tarea3_6">
+        <ns4:Bounds x="1290" y="680" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_0nxcjnb_di" bpmnElement="tarea3_9">
+        <ns4:Bounds x="1830" y="680" width="100" height="80" />
+        <ns3:BPMNLabel />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_1r5bjkk_di" bpmnElement="tarea3_10">
+        <ns4:Bounds x="2010" y="680" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Activity_0805xj5_di" bpmnElement="tarea3_11">
+        <ns4:Bounds x="2170" y="680" width="100" height="80" />
+      </ns3:BPMNShape>
+      <ns3:BPMNShape id="Event_072y5lj_di" bpmnElement="evento3_2">
+        <ns4:Bounds x="1812" y="742" width="36" height="36" />
+        <ns3:BPMNLabel>
+          <ns4:Bounds x="1770" y="753" width="32" height="14" />
+        </ns3:BPMNLabel>
+      </ns3:BPMNShape>
+      <ns3:BPMNEdge id="Flow_101t7xl_di" bpmnElement="Flow_101t7xl">
+        <ns5:waypoint x="288" y="190" />
+        <ns5:waypoint x="340" y="190" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0czl3fd_di" bpmnElement="Flow_0czl3fd">
+        <ns5:waypoint x="440" y="190" />
+        <ns5:waypoint x="530" y="190" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_1mcqovm_di" bpmnElement="Flow_1mcqovm">
+        <ns5:waypoint x="630" y="190" />
+        <ns5:waypoint x="656" y="190" />
+        <ns5:waypoint x="656" y="400" />
+        <ns5:waypoint x="692" y="400" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0in5rof_di" bpmnElement="Flow_0in5rof">
+        <ns5:waypoint x="728" y="400" />
+        <ns5:waypoint x="760" y="400" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0cfursw_di" bpmnElement="Flow_0cfursw">
+        <ns5:waypoint x="860" y="400" />
+        <ns5:waypoint x="880" y="400" />
+        <ns5:waypoint x="880" y="720" />
+        <ns5:waypoint x="950" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_06ysvk0_di" bpmnElement="Flow_06ysvk0">
+        <ns5:waypoint x="1050" y="720" />
+        <ns5:waypoint x="1120" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_1lh2jmf_di" bpmnElement="Flow_1lh2jmf">
+        <ns5:waypoint x="1220" y="720" />
+        <ns5:waypoint x="1290" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0xx2xea_di" bpmnElement="Flow_0xx2xea">
+        <ns5:waypoint x="1390" y="720" />
+        <ns5:waypoint x="1430" y="720" />
+        <ns5:waypoint x="1430" y="210" />
+        <ns5:waypoint x="1470" y="210" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_14pfqxl_di" bpmnElement="Flow_14pfqxl">
+        <ns5:waypoint x="1570" y="210" />
+        <ns5:waypoint x="1610" y="210" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0vi68t6_di" bpmnElement="Flow_0vi68t6">
+        <ns5:waypoint x="1710" y="210" />
+        <ns5:waypoint x="1770" y="210" />
+        <ns5:waypoint x="1770" y="720" />
+        <ns5:waypoint x="1830" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0zntu1i_di" bpmnElement="Flow_0zntu1i">
+        <ns5:waypoint x="1930" y="720" />
+        <ns5:waypoint x="2010" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_1ozw9l6_di" bpmnElement="Flow_1ozw9l6">
+        <ns5:waypoint x="2110" y="720" />
+        <ns5:waypoint x="2170" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0we64vq_di" bpmnElement="Flow_0we64vq">
+        <ns5:waypoint x="2270" y="720" />
+        <ns5:waypoint x="2302" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0j0lul7_di" bpmnElement="Flow_0j0lul7">
+        <ns5:waypoint x="2338" y="720" />
+        <ns5:waypoint x="2372" y="720" />
+      </ns3:BPMNEdge>
+      <ns3:BPMNEdge id="Flow_0x43z2j_di" bpmnElement="Flow_0x43z2j">
+        <ns5:waypoint x="1830" y="778" />
+        <ns5:waypoint x="1830" y="840" />
+        <ns5:waypoint x="2372" y="840" />
+      </ns3:BPMNEdge>
+    </ns3:BPMNPlane>
+  </ns3:BPMNDiagram>
+</ns0:definitions>

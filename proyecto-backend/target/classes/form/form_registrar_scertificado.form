@@ -1,0 +1,46 @@
+{
+  "components": [
+    {
+      "label": "Código estudiantil",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0o5osrd",
+        "columns": null
+      },
+      "id": "Field_0i1h8y6",
+      "key": "codigo",
+      "disabled": true
+    },
+    {
+      "label": "Tipo de certificado",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1jg4eb2",
+        "columns": null
+      },
+      "id": "Field_0wxflyi",
+      "key": "tipo_certificado",
+      "disabled": true
+    },
+    {
+      "label": "Motivo de la solicitud",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_07yxz23",
+        "columns": null
+      },
+      "id": "Field_12yyc3t",
+      "key": "motivo",
+      "disabled": true
+    }
+  ],
+  "type": "default",
+  "id": "registrar_scertificado",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.33.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.22.0",
+  "schemaVersion": 18
+}
